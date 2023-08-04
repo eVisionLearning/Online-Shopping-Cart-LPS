@@ -7,11 +7,18 @@
     string msg = TempData["msg"]?.ToString();
 }
 
-<h1>Index</h1>
+<h1>Categories</h1>
 @*<h1>@ViewBag.searchUrl</h1>*@
 <p>
+    <a asp-action="Create" class="btn-create-category">Create New (Inline)</a>
+
     <a asp-action="Create">Create New</a>
 </p>
+
+<div class="category-form">
+    <div class="form-area"></div>
+    <i class="fa fa-spin fa-spinner text-info d-none"></i>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -57,12 +64,40 @@
         }
     </tbody>
 </table>
+@section js{
+    <script>
+        //$(".category-form").hide();
+        $(".btn-create-category").click(function (e) {
+            e.preventDefault();
+            $(".category-form .fa-spinner").removeClass('d-none');
+            $.get('/Categories/Create?iar=true', function (res) {
+                $(".category-form .fa-spinner").addClass('d-none');
+                $(".category-form .form-area").hide(0).html(res).slideDown(500);
+            });
+        });
 
-@if (!string.IsNullOrWhiteSpace(msg))
+        //$(".category-create-form").submit(function(e){
+
+        //});
+
+        //$(document).on('submit', '.category-create-form', function (e) {
+        //    e.preventDefault();
+        //    //var form = $(this);
+        //    //var data = $(form).serialize();
+        //    //console.log(data);
+        //    var form = new FormData($('.category-create-form')[0]);
+        //    $.post('/Categories/Create', form, function(){
+
+        //    });
+        //});
+    </script>
+}
+
+@*@if (!string.IsNullOrWhiteSpace(msg))
 {
     @section js{
     <script>
         $.notify('@msg', "success");
     </script>
     }
-}
+}*@

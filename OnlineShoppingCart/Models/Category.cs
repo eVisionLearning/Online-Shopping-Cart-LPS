@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShoppingCart.Models
@@ -8,6 +9,7 @@ namespace OnlineShoppingCart.Models
         [Required(ErrorMessage = "Name field is required.")]
         [StringLength(100)]
         [Display(Name = "Category Name")]
+        [Remote("CategoryNameCheck", "RemoteValidations", AdditionalFields = "Id", ErrorMessage = "Name already exists")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "The Description field is required.")]

@@ -39,8 +39,14 @@ namespace OnlineShoppingCart.Controllers
         }
 
         //[HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(bool iar)
         {
+            if (iar)
+            {
+                Thread.Sleep(1500);
+                return PartialView();
+            }
+
             return View();
         }
 
