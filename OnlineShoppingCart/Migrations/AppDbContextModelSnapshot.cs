@@ -34,7 +34,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("AppRoleAppUser");
+                    b.ToTable("AppRoleAppUser", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.AppRole", b =>
@@ -52,7 +52,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.AppUser", b =>
@@ -78,7 +78,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.CartItem", b =>
@@ -106,7 +106,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("ShoppingCartId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Category", b =>
@@ -139,7 +139,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Order", b =>
@@ -166,7 +166,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.OrderDetail", b =>
@@ -197,7 +197,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Product", b =>
@@ -251,7 +251,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("CategoryId1");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.ProductImage", b =>
@@ -275,7 +275,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.ShoppingCart", b =>
@@ -292,7 +292,7 @@ namespace OnlineShoppingCart.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("AppRoleAppUser", b =>

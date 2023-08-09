@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShoppingCart.Models
 {
@@ -12,8 +13,14 @@ namespace OnlineShoppingCart.Models
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "The EncryptedPassword field is required.")]
         public string EncryptedPassword { get; set; }
+
+        [NotMapped]
+        public string Password { get; set; }
+
+        [NotMapped]
+        [Compare("Password")]
+        public string ConfirmPassword { get; set; }
 
         // Navigation property for roles
         public List<AppRole> Roles { get; set; }
@@ -22,5 +29,16 @@ namespace OnlineShoppingCart.Models
         public ShoppingCart ShoppingCart { get; set; }
 
         // Additional identification details
+    }
+
+    public class LoginViewModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

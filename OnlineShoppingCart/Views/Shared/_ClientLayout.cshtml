@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor ContextAccessor
+
+@{
+    string userName = ContextAccessor.HttpContext.Session.GetString("UN");
+}
+<!DOCTYPE html>
 <html lang="en">
    <head>
       <title>OneTech</title>
@@ -56,8 +62,8 @@
                            </div>
                            <div class="top_bar_user">
                               <div class="user_icon"><img src="images/user.svg" alt=""></div>
-                              <div><a href="#">Register</a></div>
-                              <div><a href="#">Sign in</a></div>
+                              <div><a href="/Accounts/Create">Register</a></div>
+                              <div><a href="/Login">Sign in</a></div>
                            </div>
                         </div>
                      </div>
@@ -124,6 +130,21 @@
                   </div>
                </div>
             </div>
+
+            @if (!string.IsNullOrEmpty(userName))
+            {
+                <h3 class="text-center">Welcome @userName!</h3>
+                <p class="text-center">
+                    <a href="/Login/Logout">Logout</a>
+                </p>
+            }
+            else
+            {
+                <p class="text-center">
+                    <a href="/Login">Login</a>
+                </p>
+            }
+            
             <nav class="main_nav">
                <div class="container">
                   <div class="row">

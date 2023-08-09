@@ -4,10 +4,24 @@ using OnlineShoppingCart.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Configuration.GetSection("ConnectionStrings:SqlConnection").ToString();
-builder.Services.AddDbContext<AppDbContext>(m => m.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection") ?? throw new InvalidOperationException("Connection string 'SqlConnection' not found.")));
+string connectionString = builder.Configuration.GetConnectionString("SqlConnection");
+builder.Services.AddDbContext<AppDbContext>(m => m.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'SqlConnection' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddDistributedSqlServerCache(m =>
+{
+    m.ConnectionString = connectionString;
+    m.SchemaName = "dbo";
+    m.TableName = "SessionData";
+});
+
+builder.Services.AddSession(m =>
+{
+    m.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -22,6 +36,8 @@ if (!app.Environment.IsDevelopment())
 using var scope = app.Services.CreateScope();
 var _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 _context.Database.Migrate();
+
+app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -15,6 +15,8 @@ namespace OnlineShoppingCart.Controllers
 
         public IActionResult Index()
         {
+            //var userName = HttpContext.Session.GetString("UN");
+            //if(string.IsNullOrEmpty(userName)) return RedirectToAction("Index", "Login");
             return View();
         }
 
