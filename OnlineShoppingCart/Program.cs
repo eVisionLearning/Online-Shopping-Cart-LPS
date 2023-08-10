@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using OnlineShoppingCart.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
+//builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 //builder.Configuration.GetSection("ConnectionStrings:SqlConnection").ToString();
 string connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<AppDbContext>(m => m.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'SqlConnection' not found.")));
@@ -17,11 +19,14 @@ builder.Services.AddDistributedSqlServerCache(m =>
     m.TableName = "SessionData";
 });
 
+// singleton
+// scope
+// transient
+
 builder.Services.AddSession(m =>
 {
     m.IdleTimeout = TimeSpan.FromMinutes(30);
 });
-builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

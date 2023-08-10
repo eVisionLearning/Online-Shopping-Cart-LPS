@@ -9,9 +9,16 @@ namespace OnlineShoppingCart.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        private readonly IHttpContextAccessor _contextAccessor;
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+        private AppUserViewModel LoggedInUser { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor contextAccessor)
             : base(options)
         {
+            //_contextAccessor = contextAccessor;
+            //ProcesLogin();
+            HttpContextAccessor = contextAccessor;
+
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -23,6 +30,28 @@ namespace OnlineShoppingCart.Data
         public DbSet<ShoppingCart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
+        public AppUserViewModel GetLoggedInUser()
+        {
+            if(LoggedInUser !=null) return LoggedInUser;
+
+            var userId = HttpContextAccessor.HttpContext.Session.GetString(GlobalConfig.LoginSessionName);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var user = Users.Where(m => m.Id == userId)
+                    .Select(m => new AppUserViewModel
+                    {
+                        Id = m.Id,
+                        DbEntryTime = m.DbEntryTime,
+                        Email = m.Email,
+                        Name = m.Name,
+                        Roles = m.Roles.Select(n => n.Name).ToList()
+                    }).FirstOrDefault();
+
+                LoggedInUser = user;
+                return LoggedInUser;
+            }
+            return null;
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasOne(m => m.Brand).WithMany().OnDelete(DeleteBehavior.Cascade);

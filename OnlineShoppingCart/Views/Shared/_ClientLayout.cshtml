@@ -2,7 +2,7 @@
 @inject IHttpContextAccessor ContextAccessor
 
 @{
-    string userName = ContextAccessor.HttpContext.Session.GetString("UN");
+    string userName = ContextAccessor.HttpContext.Session.GetString(GlobalConfig.LoginSessionName);
 }
 <!DOCTYPE html>
 <html lang="en">

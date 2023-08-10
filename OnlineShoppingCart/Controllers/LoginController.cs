@@ -30,7 +30,7 @@ namespace OnlineShoppingCart.Controllers
 
             if ((user.Id + model.Password).Encrypt() == user.EncryptedPassword)
             {
-                HttpContext.Session.SetString("UN", user.Email);
+                HttpContext.Session.SetString(GlobalConfig.LoginSessionName, user.Id);
                 return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("Password", "Invalid password");

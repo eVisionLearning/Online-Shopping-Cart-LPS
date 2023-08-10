@@ -31,6 +31,13 @@ namespace OnlineShoppingCart.Models
         // Additional identification details
     }
 
+    public class AppUserViewModel : ShareModel
+    {
+        public string Name { get; set; }
+
+        public string Email { get; set; }
+        public List<string> Roles { get; set; }
+    }
     public class LoginViewModel
     {
         [Required]
