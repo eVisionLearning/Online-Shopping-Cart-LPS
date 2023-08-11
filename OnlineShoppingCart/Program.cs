@@ -3,14 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using OnlineShoppingCart.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpContextAccessor();
-//builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-//builder.Configuration.GetSection("ConnectionStrings:SqlConnection").ToString();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 string connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<AppDbContext>(m => m.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'SqlConnection' not found.")));
 
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddDistributedSqlServerCache(m =>
 {
@@ -56,4 +54,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-//test comments

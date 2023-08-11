@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OnlineShoppingCart.Models;
 
 namespace OnlineShoppingCart.Data
 {
     public class AppDbContext : DbContext
     {
-        private readonly IHttpContextAccessor _contextAccessor;
-        protected IHttpContextAccessor HttpContextAccessor { get; }
+        public IHttpContextAccessor HttpContextAccessor { get; }
         private AppUserViewModel LoggedInUser { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor contextAccessor)
             : base(options)
@@ -29,15 +29,30 @@ namespace OnlineShoppingCart.Data
         public DbSet<AppRole> Roles { get; set; }
         public DbSet<ShoppingCart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<LoginHistory> LoginHistory { get; set; }
 
         public AppUserViewModel GetLoggedInUser()
         {
-            if(LoggedInUser !=null) return LoggedInUser;
-
-            var userId = HttpContextAccessor.HttpContext.Session.GetString(GlobalConfig.LoginSessionName);
-            if (!string.IsNullOrEmpty(userId))
+            if (LoggedInUser != null) return LoggedInUser;
+            //var userId = HttpContextAccessor.HttpContext.Session.GetString(GlobalConfig.LoginSessionName);
+            var token = HttpContextAccessor.HttpContext.Request.Cookies[GlobalConfig.LoginCookieName]?.ToString();
+            if (string.IsNullOrEmpty(token))
             {
-                var user = Users.Where(m => m.Id == userId)
+                token = HttpContextAccessor.HttpContext.Request.Headers[GlobalConfig.LoginCookieName].ToString();
+            }
+            if (!string.IsNullOrEmpty(token))
+            {
+                var loginHistory = LoginHistory.Where(m => m.Token == token).FirstOrDefault();
+                if (loginHistory == null || loginHistory.ValidTill < DateTime.Now)
+                {
+                    HttpContextAccessor.HttpContext.Response.Cookies.Delete(GlobalConfig.LoginCookieName, new CookieOptions
+                    {
+                        IsEssential = true,
+                    });
+
+                    return null;
+                }
+                var user = LoginHistory.Where(m => m.Token == token).Select(m => m.User)
                     .Select(m => new AppUserViewModel
                     {
                         Id = m.Id,

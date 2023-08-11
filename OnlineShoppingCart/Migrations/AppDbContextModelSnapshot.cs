@@ -34,7 +34,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("AppRoleAppUser", (string)null);
+                    b.ToTable("AppRoleAppUser");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.AppRole", b =>
@@ -52,7 +52,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.AppUser", b =>
@@ -68,7 +68,6 @@ namespace OnlineShoppingCart.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EncryptedPassword")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -78,7 +77,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.CartItem", b =>
@@ -106,7 +105,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("ShoppingCartId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Category", b =>
@@ -139,7 +138,43 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("OnlineShoppingCart.Models.LoginHistory", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ClientInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ClosedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DbEntryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IPAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OS")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ValidTill")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LoginHistory");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Order", b =>
@@ -166,7 +201,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.OrderDetail", b =>
@@ -197,7 +232,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Product", b =>
@@ -251,7 +286,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("CategoryId1");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.ProductImage", b =>
@@ -275,7 +310,7 @@ namespace OnlineShoppingCart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.ShoppingCart", b =>
@@ -292,7 +327,7 @@ namespace OnlineShoppingCart.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("AppRoleAppUser", b =>
@@ -327,6 +362,16 @@ namespace OnlineShoppingCart.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ShoppingCart");
+                });
+
+            modelBuilder.Entity("OnlineShoppingCart.Models.LoginHistory", b =>
+                {
+                    b.HasOne("OnlineShoppingCart.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OnlineShoppingCart.Models.Order", b =>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineShoppingCart.Data;
+using OnlineShoppingCart.Handlers;
 using OnlineShoppingCart.Models;
 
 namespace OnlineShoppingCart.Controllers
@@ -22,10 +23,37 @@ namespace OnlineShoppingCart.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Users.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
-      
+        [Authorized]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [Authorized]
+        public IActionResult ChangePassword(AppUser model)
+        {
+            if (model.Password == model.ConfirmPassword)
+            {
+                var userId = _context.GetLoggedInUser().Id;
+                var user = _context.Users.Where(m => m.Id == userId).FirstOrDefault();
+
+                user.EncryptedPassword = (userId + model.Password).Encrypt();
+                _context.SaveChanges();
+
+                _context.HttpContextAccessor.HttpContext.Response.Cookies.Delete(GlobalConfig.LoginCookieName, new CookieOptions
+                {
+                    IsEssential = true
+                });
+
+                return RedirectToAction("Index", "Login");
+            }
+            ModelState.AddModelError("", "bBth paswords not matched.");
+            return View(model);
+        }
+
         // GET: Accounts/Create
         public IActionResult Create()
         {
@@ -132,14 +160,14 @@ namespace OnlineShoppingCart.Controllers
             {
                 _context.Users.Remove(appUser);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AppUserExists(string id)
         {
-          return _context.Users.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

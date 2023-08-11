@@ -8,8 +8,8 @@ using System.Drawing;
 
 namespace OnlineShoppingCart.Controllers
 {
-    [Authorized(Roles = $"{GlobalConfig.AdminRole}, {GlobalConfig.ShopKeeperRole}")]
-    //[Authorized]
+    //[Authorized(Roles = $"{GlobalConfig.AdminRole}, {GlobalConfig.ShopKeeperRole}")]
+    [Authorized]
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
