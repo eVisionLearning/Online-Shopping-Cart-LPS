@@ -19,9 +19,10 @@ namespace OnlineShoppingCart.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string categoryId)
         {
             var products = _context.Products
+                .Where(m => string.IsNullOrEmpty(categoryId) || m.CategoryId == categoryId)
                 .Select(m => new ProductViewModel
                 {
                     Brand = m.Brand.Name,

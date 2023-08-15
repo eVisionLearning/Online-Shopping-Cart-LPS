@@ -28,6 +28,8 @@ namespace OnlineShoppingCart.Models
 
         [ForeignKey("Brand")]
         public string BrandId { get; set; }
+
+        //[InverseProperty("BrandWiseProducts")]
         public virtual Category Brand { get; set; }
 
         [Required(ErrorMessage = "The Stock field is required.")]
