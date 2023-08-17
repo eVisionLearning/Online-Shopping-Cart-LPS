@@ -1,6 +1,7 @@
 ﻿using Azure.Core.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using OnlineShoppingCart.Data;
 using OnlineShoppingCart.Handlers;
 using OnlineShoppingCart.Models;
@@ -16,12 +17,40 @@ namespace OnlineShoppingCart.Controllers
         public CartController(AppDbContext context)
         {
             _context = context;
-            loggedInUserId = _context.GetLoggedInUser().Id;
+            loggedInUserId = _context.GetLoggedInUser()?.Id;
+        }
+
+
+        [Authorized]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult DeleteItem(string id)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            if (product == null)
+            {
+                return Json(new { Status = false, Msg = "Product not found for id " + id });
+            }
+
+            var cart = _context.Carts.Include(m => m.CartItems).Where(m => m.UserId == loggedInUserId).FirstOrDefault();
+
+            var existingItem = cart.CartItems.Where(m => m.ProductId == id).FirstOrDefault();
+            if (existingItem != null)
+            {
+                _context.Remove(existingItem);
+            }
+            _context.SaveChanges();
+            return GetCartItems();
         }
 
         [HttpPost]
         public IActionResult AddOrUpdateCart(string id, int qty = 1, bool isUpdate = false)
         {
+            System.Threading.Thread.Sleep(250);
             var product = _context.Products.FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
@@ -69,7 +98,7 @@ namespace OnlineShoppingCart.Controllers
 
             var result = products.Select(m => new
             {
-                m.Id,
+                ProductId = m.Id,
                 m.Name,
                 m.CategoryName,
                 m.Price,
@@ -79,5 +108,48 @@ namespace OnlineShoppingCart.Controllers
 
             return Json(new { Status = true, Data = result });
         }
+
+
+        [HttpPost]
+        public IActionResult GetCartItems()
+        {
+            System.Threading.Thread.Sleep(250);
+            if (string.IsNullOrEmpty(loggedInUserId))
+            {
+                return Json(new { Status = false, Msg = "Log in requried." });
+            }
+
+            var cart = _context.Carts.Include(m => m.CartItems).Where(m => m.UserId == loggedInUserId).FirstOrDefault();
+            if (cart == null)
+            {
+                cart = new ShoppingCart { UserId = loggedInUserId, CartItems = new() };
+                _context.Carts.Add(cart);
+                _context.SaveChanges();
+            }
+
+            var productIds = cart.CartItems.Select(m => m.ProductId).ToList();
+            var products = _context.Products.Where(m => productIds.Contains(m.Id))
+                .Select(m => new
+                {
+                    ProductId = m.Id,
+                    m.Name,
+                    ImageUrl = m.Images.OrderBy(s => s.Rank).Select(s => s.URL).FirstOrDefault(),
+                    m.Price,
+                    CategoryName = m.Category.Name
+                }).ToList();
+
+            var result = products.Select(m => new
+            {
+                m.ProductId,
+                m.Name,
+                m.CategoryName,
+                m.Price,
+                m.ImageUrl,
+                Qty = cart.CartItems.Where(i => i.ProductId == m.ProductId).Select(q => q.Quantity).FirstOrDefault()
+            }).ToList();
+
+            return Json(new { Status = true, Data = result });
+        }
+
     }
 }
