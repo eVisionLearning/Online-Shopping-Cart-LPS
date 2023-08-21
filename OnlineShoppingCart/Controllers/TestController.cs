@@ -35,6 +35,11 @@ namespace OnlineShoppingCart.Controllers
             return View();
         }
 
+        public IActionResult Order()
+        {
+            return View();
+        }
+
         public IActionResult ExtensionMethods()
         {
             string obj = "some data in string";

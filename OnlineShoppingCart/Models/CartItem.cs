@@ -2,7 +2,7 @@
 
 namespace OnlineShoppingCart.Models
 {
-    public class CartItem:ShareModel
+    public class CartItem : ShareModel
     {
         [Required]
         public string ShoppingCartId { get; set; }

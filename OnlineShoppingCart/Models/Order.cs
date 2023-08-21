@@ -15,6 +15,8 @@ namespace OnlineShoppingCart.Models
         [Required(ErrorMessage = "The ShippingAddress field is required.")]
         [StringLength(500)]
         public string ShippingAddress { get; set; }
+        public string ContactNumber { get; set; }
+        public string EmailAddress { get; set; }
 
         public List<OrderDetail> Details { get; set; }
     }
