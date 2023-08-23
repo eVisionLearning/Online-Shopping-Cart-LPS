@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Repositories;
 using OnlineShoppingCart.Data;
 
 namespace OnlineShoppingCart.Controllers
@@ -45,7 +46,7 @@ namespace OnlineShoppingCart.Controllers
             _context.Categories.OrderBy(m => m.Type).ToList();
             return View();
         }
-        
+
         public IActionResult Take()
         {
             _context.Categories.Where(m => string.IsNullOrEmpty(m.LogoUrl)).Take(10).ToList();
@@ -65,10 +66,19 @@ namespace OnlineShoppingCart.Controllers
             var totalProducts = _context.Products.Count();
             return View();
         }
-        
+
         public IActionResult Like()
         {
             var totalProducts = _context.Products.Where(m => m.Name.Contains("Watch")).ToList();
+            return View();
+        }
+
+        public IActionResult In()
+        {
+            List<decimal> prices = new() { 100, 101, 500, 1000 };
+            //var totalProducts = _context.Products.Where(m => m.Price >= 100 && m.Price <= 1000);
+            var totalProducts = _context.Products.Where(m => prices.Contains(m.Price));
+            var totalProducts2 = _context.Products.Where(m => !(m.Price > 10 && m.Price < 100));
             return View();
         }
     }
