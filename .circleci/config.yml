@@ -1,0 +1,30 @@
+version: 2.1
+orbs:
+  windows: circleci/windows@2.2.0
+jobs:
+  build:
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: dotnet restore
+      - run:
+          name: Build application
+          command: dotnet build --configuration Release
+#   deploy:
+#     executor:
+#       name: windows/default
+#     steps:
+#       - checkout
+#       - run:
+#           name: Deploy application
+#           command: # Add your deployment command here
+# workflows:
+#   build_and_deploy:
+#     jobs:
+#       - build
+#       - deploy:
+#           requires:
+#             - build
