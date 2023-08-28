@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace OnlineShoppingCart.Controllers
 {
     public class TestController : Controller
     {
-
         public IActionResult Vue()
         {
             return View();
