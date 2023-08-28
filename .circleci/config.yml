@@ -8,23 +8,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install .NET 7.0
+          command: |
+            choco install dotnet-sdk --version=7.0.400 -y
+      - run:
           name: Install dependencies
           command: dotnet restore
       - run:
           name: Build application
           command: dotnet build --configuration Release
-#   deploy:
-#     executor:
-#       name: windows/default
-#     steps:
-#       - checkout
-#       - run:
-#           name: Deploy application
-#           command: # Add your deployment command here
-# workflows:
-#   build_and_deploy:
-#     jobs:
-#       - build
-#       - deploy:
-#           requires:
-#             - build
