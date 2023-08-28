@@ -1,69 +1,95 @@
-﻿@model IEnumerable<OnlineShoppingCart.Models.Category>
-
+﻿@model IEnumerable<CategoryViewModel>
+@inject AppDbContext _db
 @{
-    ViewData["Title"] = "Index";
+
+    CategoryType type = ViewBag.type;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     //ViewBag.searchUrl = ""; // sents to layout
     string msg = TempData["msg"]?.ToString();
 }
 
-<h1>Categories</h1>
-@*<h1>@ViewBag.searchUrl</h1>*@
-<p>
-    <a asp-action="Create" class="btn-create-category">Create New (Inline)</a>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Categories (@type)</h4>
+        <p class="card-description">
+            Setup Section
+        </p>
 
-    <a asp-action="Create">Create New</a>
-</p>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a asp-action="Create" class="btn btn-info btn-create-category">Create New (Inline)</a>
+            <a asp-action="Create" class="btn btn-info">Create New</a>
+            @foreach (CategoryType item in Enum.GetValues(typeof(CategoryType)))
+            {
+                if (item != type || true)
+                {
+                    <a class="btn btn-info" href="/Categories?type=@item">@item</a>
+                }
+            }
+        </div>
 
-<div class="category-form">
-    <div class="form-area"></div>
-    <i class="fa fa-spin fa-spinner text-info d-none"></i>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                Logo
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.Name
-                </td>
-                <td>
+        <div class="category-form">
+            <div class="form-area"></div>
+            <i class="fa fa-spin fa-spinner text-info d-none"></i>
+        </div>
+        <table class="table action3">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    @* <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th title="Category Wise | Brand Wise">Products</th>
+                    <th>
+                        Logo
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        @*<td>
                     @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    <img src="/@item.LogoUrl" />
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="fa fa-edit"></a>
-                    &nbsp;
-                    <a asp-action="Details" asp-route-id="@item.Id" class="fa fa-list"></a>
-                    &nbsp;
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-trash"></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    </td>*@
+                        <td>
+                            @if (item.Status)
+                            {
+                                <span class="badge bg-success text-white">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger text-white">Blocked</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge bg-info text-white">@item.CategoryWiseProducts</span>
+                            <span class="badge bg-success text-white">@item.BrandWiseProducts</span>
+                        </td>
+                        <td>
+                            <img src="/@item.LogoUrl" />
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="fa fa-edit"></a>
+                            &nbsp;
+                            <a asp-action="Index" asp-controller="Products" asp-route-categoryId="@item.Id" class="fa fa-list"></a>
+                            &nbsp;
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-trash"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 @section js{
     <script>
         //$(".category-form").hide();
@@ -76,20 +102,20 @@
             });
         });
 
-        //$(".category-create-form").submit(function(e){
+                                        //$(".category-create-form").submit(function(e){
 
-        //});
+                                        //});
 
-        //$(document).on('submit', '.category-create-form', function (e) {
-        //    e.preventDefault();
-        //    //var form = $(this);
-        //    //var data = $(form).serialize();
-        //    //console.log(data);
-        //    var form = new FormData($('.category-create-form')[0]);
-        //    $.post('/Categories/Create', form, function(){
+                                        //$(document).on('submit', '.category-create-form', function (e) {
+                                        //    e.preventDefault();
+                                        //    //var form = $(this);
+                                        //    //var data = $(form).serialize();
+                                        //    //console.log(data);
+                                        //    var form = new FormData($('.category-create-form')[0]);
+                                        //    $.post('/Categories/Create', form, function(){
 
-        //    });
-        //});
+                                        //    });
+                                        //});
     </script>
 }
 

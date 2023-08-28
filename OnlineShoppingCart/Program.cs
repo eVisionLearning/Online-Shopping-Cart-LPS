@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OnlineShoppingCart.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var environment = builder.Environment;
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 string connectionString = builder.Configuration.GetConnectionString("SqlConnection");

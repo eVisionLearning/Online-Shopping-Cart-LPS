@@ -69,8 +69,9 @@ namespace OnlineShoppingCart.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>().HasOne(m => m.Brand).WithMany().OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Product>().HasOne(m => m.Category).WithMany().OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Product>().HasOne(m => m.Brand).WithMany().OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Product>().HasOne(m => m.Category).WithMany().OnDelete(DeleteBehavior.Cascade);
+
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

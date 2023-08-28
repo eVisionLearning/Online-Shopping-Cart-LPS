@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@inject AppDbContext _db
+@{
+    string k = _db.HttpContextAccessor.HttpContext.Request.Query["k"].ToString();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -18,6 +23,7 @@
     <!-- endinject -->
     <link rel="shortcut icon" href="images/favicon.png" />
     <link href="~/themes/onetech-client/plugins/fontawesome-free-5.0.1/css/fontawesome-all.css" rel="stylesheet" />
+    <link href="~/css/common.css" rel="stylesheet" />
     @RenderSection("css", false)
 </head>
 <body>
@@ -206,7 +212,7 @@
                     <li class="nav-item nav-search d-none d-md-block mr-0">
                         <form action="@ViewBag.searchUrl">
                             <div class="input-group">
-                                <input type="search" value="@ViewBag.searchKeyword" name="k" class="form-control" placeholder="Search..." aria-label="search" aria-describedby="search">
+                                <input type="search" value="@k" name="k" class="form-control" placeholder="Search..." aria-label="search" aria-describedby="search">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="search">
                                         <i class="typcn typcn-zoom"></i>

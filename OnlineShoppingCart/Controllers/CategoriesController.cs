@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using OnlineShoppingCart.Data;
 using OnlineShoppingCart.Models;
 
@@ -13,8 +15,34 @@ namespace OnlineShoppingCart.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string k)
+        public IActionResult Index(string k, CategoryType? type)
         {
+            if (type == null)
+            {
+                type = CategoryType.Category;
+            }
+            ViewBag.type = type;
+
+            var categoryQuery = _context.Categories.Where(m => m.Type == type);
+            if (!string.IsNullOrWhiteSpace(k))
+            {
+                categoryQuery = categoryQuery.Where(m => m.Name.StartsWith(k) || m.Description.Contains(k));
+            }
+            ViewBag.searchUrl = "/Categories";
+            //ViewBag.searchKeyword = k;
+
+            var data = categoryQuery.Select(m => new CategoryViewModel
+            {
+                BrandWiseProducts = m.BrandWiseProducts.Count(),
+                CategoryWiseProducts = m.CategoryWiseProducts.Count(),
+                Id = m.Id,
+                LogoUrl = m.LogoUrl,
+                Name = m.Name,
+                Status = m.Status,
+                Type = m.Type
+            }).ToList();
+            return View(data);
+
             //var data = _context.Categories
             //    //.Where(m => m.Name == k)
             //    //.Where(m => m.Name.StartsWith(k))
@@ -26,16 +54,16 @@ namespace OnlineShoppingCart.Controllers
             //    .OrderByDescending(m => m.DbEntryTime).ToList();
             //return View(data);
 
-            var categoryQuery = _context.Categories.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(k))
-            {
-                categoryQuery = categoryQuery.Where(m => m.Name.StartsWith(k) || m.Description.Contains(k));
-            }
-            ViewBag.searchUrl = "/Categories";
-            ViewBag.searchKeyword = k;
+            //var categoryQuery = _context.Categories.Where(m => m.Type == type);
+            //if (!string.IsNullOrWhiteSpace(k))
+            //{
+            //    categoryQuery = categoryQuery.Where(m => m.Name.StartsWith(k) || m.Description.Contains(k));
+            //}
+            //ViewBag.searchUrl = "/Categories";
+            ////ViewBag.searchKeyword = k;
 
-            var data = categoryQuery.ToList();
-            return View(data);
+            //var data = categoryQuery.Include(m => m.CategoryWiseProducts).ToList();
+            //return View(data);
         }
 
         //[HttpGet]
