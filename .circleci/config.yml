@@ -18,19 +18,12 @@ jobs:
           name: Build application
           command: dotnet build --configuration Release
       - run:
-        name: Print env variable debugging starting
-        command: echo $DEPLOY_PASSWORD
-      - run:
-        name: Print DEPLOY_PASSWORD
-        command: echo $DEPLOY_PASSWORD
-      - run:
-        name: Print env variable debugging ended
-        command: echo $DEPLOY_PASSWORD
-
+          name: Print DEPLOY_PASSWORD
+          command: echo $DEPLOY_PASSWORD
       - run:
           name: Publish application
           command: |
-            dotnet publish --configuration Release /p:PublishProfile="Properties/PublishProfiles/CircleCI - Web Deploy.pubxml" /p:Password=test1234
+            dotnet publish --configuration Release /p:PublishProfile="Properties/PublishProfiles/CircleCI - Web Deploy.pubxml" /p:Password=$DEPLOY_PASSWORD
 workflows:
   build_and_deploy:
     jobs:
