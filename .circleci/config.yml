@@ -20,7 +20,7 @@ jobs:
       - run:
           name: Publish application
           command: |
-            dotnet publish --configuration Release /p:PublishProfile="Properties/PublishProfiles/nexussoftwares-001-subsite18 - Web Deploy.pubxml" /p:Password=$DEPLOY_PASSWORD
+            dotnet publish --configuration Release /p:PublishProfile="Properties/PublishProfiles/CircleCI - Web Deploy.pubxml" /p:Password=$DEPLOY_PASSWORD
 workflows:
   build_and_deploy:
     jobs:
