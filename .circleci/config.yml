@@ -19,11 +19,11 @@ jobs:
           command: dotnet build --configuration Release
       - run:
           name: Print DEPLOY_PASSWORD
-          command: echo $DEPLOY_PASSWORD
+          command: echo ${DEPLOY_PASSWORD}
       - run:
           name: Publish application
           command: |
-            dotnet publish --configuration Release /p:PublishProfile="Properties/PublishProfiles/CircleCI - Web Deploy.pubxml" /p:Password=$DEPLOY_PASSWORD
+            dotnet publish --configuration Release /p:PublishProfile="Properties/PublishProfiles/CircleCI - Web Deploy.pubxml" /p:Password=${DEPLOY_PASSWORD}
 workflows:
   build_and_deploy:
     jobs:
