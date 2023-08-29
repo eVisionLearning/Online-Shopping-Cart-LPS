@@ -8,8 +8,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Print environment variables
-          command: env
+          name: Print deploy password
+          command: $DEPLOY_PASSWORD
 workflows:
   build_and_deploy:
     jobs:
