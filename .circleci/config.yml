@@ -1,9 +1,12 @@
 version: 2.1
+orbs:
+  windows: circleci/windows@2.2.0
 jobs:
   build:
-    docker:
-      - image: cimg/base:stable
+    executor:
+      name: windows/default
     steps:
+      - checkout
       - run:
           name: Print environment variables
           command: env
